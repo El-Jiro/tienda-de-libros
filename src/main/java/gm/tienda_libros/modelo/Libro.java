@@ -11,8 +11,8 @@ import java.time.Year;
 @Entity
 @Data
 @AllArgsConstructor
-public class Libro {
 
+public class Libro {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Integer idLibro;
