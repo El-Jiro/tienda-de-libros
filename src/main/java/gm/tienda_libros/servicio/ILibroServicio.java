@@ -5,7 +5,7 @@ import gm.tienda_libros.repositorio.LibroRepositorio;
 
 import java.util.List;
 
-public interface ILibroServicio extends LibroRepositorio {
+public interface ILibroServicio {
 
      List<Libro> listarLibros();
 
