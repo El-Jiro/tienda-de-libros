@@ -1,4 +1,7 @@
 package gm.tienda_libros.vista;
 
-public class LibroForm {
+import javax.swing.*;
+
+public class LibroForm extends JFrame {
+
 }
