@@ -16,26 +16,29 @@ public class LibroServicio implements ILibroServicio{
 
     @Override
     public List<Libro> listarLibros() {
-        return List.of();
+        List<Libro> libros = libroRepositorio.findAll();
+        return libros;
     }
 
     @Override
     public Libro buscarLibroPorId(Integer idLibro) {
-        return null;
+        Libro libro = libroRepositorio.findById(idLibro).orElse(null);
+        return libro;
     }
 
     @Override
     public void guardarLibro(Libro libro) {
-
+        libroRepositorio.save(libro);
     }
 
     @Override
     public void eliminarLibro(Integer idLibro) {
-
+        libroRepositorio.deleteById(idLibro);
     }
 
     @Override
     public boolean verificarExistencia(Integer idLibro) {
-        return false;
+        var exists = libroRepositorio.existsById(idLibro);
+        return exists;
     }
 }
