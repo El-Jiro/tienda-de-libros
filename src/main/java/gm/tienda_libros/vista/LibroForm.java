@@ -41,4 +41,8 @@ public class LibroForm extends JFrame {
         //Los pasamos como argumentos al método setLocation
         setLocation(ejeX, ejeY);
     }
+
+    private void createUIComponents() {
+        
+    }
 }
