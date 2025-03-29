@@ -12,6 +12,7 @@ public class LibroForm extends JFrame {
 
     private LibroServicio libroServicio;
     private JPanel panel;
+    private JTable tablaLibros;
 
     @Autowired
     public LibroForm(LibroServicio libroServicio){
@@ -33,7 +34,7 @@ public class LibroForm extends JFrame {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         //Obtenemos las dimensiones de nuestra pantalla
         Dimension tamañoPantalla = toolkit.getScreenSize();
-        //Calculamos los ejes x e y restándole al alto y ancho de nuestra pantalla
+        //Calculamos los ejes X e Y restándole al alto y ancho de nuestra pantalla
         //el alto y ancho de nuestra ventana y dividiendo el resultado entre 2
         int ejeX = (tamañoPantalla.width - getWidth())/2;
         int ejeY = (tamañoPantalla.height - getHeight())/2;
