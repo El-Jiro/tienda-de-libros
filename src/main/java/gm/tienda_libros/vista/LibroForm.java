@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 @Component
@@ -13,6 +14,7 @@ public class LibroForm extends JFrame {
     private LibroServicio libroServicio;
     private JPanel panel;
     private JTable tablaLibros;
+    private DefaultTableModel tableModel;
 
     @Autowired
     public LibroForm(LibroServicio libroServicio){
@@ -43,6 +45,14 @@ public class LibroForm extends JFrame {
     }
 
     private void createUIComponents() {
-        
+
+        //Creamos una instancia de DefaultTableModel, especificamos 0 filas y 5 columnas en el constructor
+        tableModel = new DefaultTableModel(0,5);
+        //Creamos un array de Strings para los nombres o encabezados de las columnas
+        String[] encabezados = {"Título", "Autor", "Editorial", "Año", "Precio", "Existencias"};
+        //Llamamos al setColumnIdentifiers y le pasamos nuestro array
+        this.tableModel.setColumnIdentifiers(encabezados);
+        //Inicializamos el objeto tablaLibros como instancia de JTable y le pasamos tableModel en el constructor
+        tablaLibros = new JTable(tableModel);
     }
 }
