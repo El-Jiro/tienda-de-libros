@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
 @Component
 public class LibroForm extends JFrame {
 
-    private LibroServicio libroServicio;
+    private final LibroServicio libroServicio;
     private JPanel panel;
     private JTable tablaLibros;
     private DefaultTableModel tableModel;
@@ -58,7 +58,9 @@ public class LibroForm extends JFrame {
         //Inicializamos el objeto tablaLibros como instancia de JTable y le pasamos tableModel en el constructor
         tablaLibros = new JTable(tableModel);
         mostrarLibros();
-        //SwingUtilities.invokeLater(this::autoajustarAlContenido);
+        SwingUtilities.invokeLater(this::autoajustarAlContenido);
+        //tablaLibros.getTableHeader().setResizingAllowed(true);
+        //tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 
     private void mostrarLibros(){
@@ -82,7 +84,7 @@ public class LibroForm extends JFrame {
         });
     }
 
-    /*private void autoajustarAlContenido(){
+    private void autoajustarAlContenido(){
         tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         for(int columna = 0; columna<tablaLibros.getColumnCount(); columna++){
@@ -91,13 +93,13 @@ public class LibroForm extends JFrame {
 
             for(int fila = 0; fila < tablaLibros.getRowCount(); fila++){
                 TableCellRenderer renderer = tablaLibros.getCellRenderer(fila, columna);
-                Component component = (Component) tablaLibros.prepareRenderer(renderer, fila, columna);
+                java.awt.Component component =  tablaLibros.prepareRenderer(renderer, fila, columna);
                 if (component instanceof JComponent) {
-                    anchoMaximo = Math.max(((JComponent) component).getPreferredSize().width + 10, anchoMaximo);
+                    anchoMaximo = Math.max(((JComponent) component).getPreferredSize().width + 5, anchoMaximo);
                 }
             }
 
             column.setPreferredWidth(anchoMaximo);
         }
-    }*/
+    }
 }
