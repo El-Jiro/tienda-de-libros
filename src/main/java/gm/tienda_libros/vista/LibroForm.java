@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -59,6 +60,7 @@ public class LibroForm extends JFrame {
         tablaLibros = new JTable(tableModel);
         mostrarLibros();
         SwingUtilities.invokeLater(this::autoajustarAlContenido);
+        SwingUtilities.invokeLater(this::centrarContenido);
         //tablaLibros.getTableHeader().setResizingAllowed(true);
         //tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
@@ -100,6 +102,14 @@ public class LibroForm extends JFrame {
             }
 
             column.setPreferredWidth(anchoMaximo);
+        }
+    }
+
+    private void centrarContenido(){
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for(int columna = 0; columna<tablaLibros.getColumnCount(); columna++){
+            tablaLibros.getColumnModel().getColumn(columna).setCellRenderer(centerRenderer);
         }
     }
 }
