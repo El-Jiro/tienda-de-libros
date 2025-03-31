@@ -51,7 +51,12 @@ public class LibroForm extends JFrame {
     private void createUIComponents() {
 
         //Creamos una instancia de DefaultTableModel, especificamos 0 filas y 7 columnas en el constructor
-        tableModel = new DefaultTableModel(0,8);
+        tableModel = new DefaultTableModel(0,8){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         //Creamos un array de Strings para los nombres o encabezados de las columnas
         String[] encabezados = {"ID", "Título", "Autor", "Editorial", "Año", "Precio", "Existencias"};
         //Llamamos al setColumnIdentifiers y le pasamos nuestro array
@@ -61,9 +66,11 @@ public class LibroForm extends JFrame {
         mostrarLibros();
         SwingUtilities.invokeLater(this::autoajustarAlContenido);
         SwingUtilities.invokeLater(this::centrarContenido);
+
         //tablaLibros.getTableHeader().setResizingAllowed(true);
         //tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
+
 
     private void mostrarLibros(){
         //Limpiar la tabla
