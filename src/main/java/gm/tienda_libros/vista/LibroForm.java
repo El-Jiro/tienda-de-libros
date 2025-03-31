@@ -6,7 +6,10 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
+import javax.swing.SwingUtilities;
 
 @Component
 public class LibroForm extends JFrame {
@@ -30,7 +33,7 @@ public class LibroForm extends JFrame {
         //Lo hacemos visible
         setVisible(true);
         //Definimos el tamaño de la ventana en 900 x 600 px
-        setSize(900, 600);
+        setSize(1000, 700);
         /*Esto es para centrar la ventana*/
         //Obtenemos la información del sistema
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -46,13 +49,55 @@ public class LibroForm extends JFrame {
 
     private void createUIComponents() {
 
-        //Creamos una instancia de DefaultTableModel, especificamos 0 filas y 5 columnas en el constructor
-        tableModel = new DefaultTableModel(0,5);
+        //Creamos una instancia de DefaultTableModel, especificamos 0 filas y 7 columnas en el constructor
+        tableModel = new DefaultTableModel(0,8);
         //Creamos un array de Strings para los nombres o encabezados de las columnas
-        String[] encabezados = {"Título", "Autor", "Editorial", "Año", "Precio", "Existencias"};
+        String[] encabezados = {"ID", "Título", "Autor", "Editorial", "Año", "Precio", "Existencias"};
         //Llamamos al setColumnIdentifiers y le pasamos nuestro array
         this.tableModel.setColumnIdentifiers(encabezados);
         //Inicializamos el objeto tablaLibros como instancia de JTable y le pasamos tableModel en el constructor
         tablaLibros = new JTable(tableModel);
+        mostrarLibros();
+        //SwingUtilities.invokeLater(this::autoajustarAlContenido);
     }
+
+    private void mostrarLibros(){
+        //Limpiar la tabla
+        tableModel.setRowCount(0);
+        //Obtener los libros
+        var libros = libroServicio.listarLibros();
+        libros.forEach(libro -> {
+            Object [] libroFila = {
+                    libro.getIdLibro(),
+                    libro.getTitulo(),
+                    libro.getAutor(),
+                    libro.getEditorial(),
+                    libro.getAño(),
+                    libro.getPrecio(),
+                    libro.getExistencias()
+            };
+
+            //Añadimos la fila a la tabla
+            this.tableModel.addRow(libroFila);
+        });
+    }
+
+    /*private void autoajustarAlContenido(){
+        tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        for(int columna = 0; columna<tablaLibros.getColumnCount(); columna++){
+            TableColumn column = tablaLibros.getColumnModel().getColumn(columna);
+            int anchoMaximo = 0;
+
+            for(int fila = 0; fila < tablaLibros.getRowCount(); fila++){
+                TableCellRenderer renderer = tablaLibros.getCellRenderer(fila, columna);
+                Component component = (Component) tablaLibros.prepareRenderer(renderer, fila, columna);
+                if (component instanceof JComponent) {
+                    anchoMaximo = Math.max(((JComponent) component).getPreferredSize().width + 10, anchoMaximo);
+                }
+            }
+
+            column.setPreferredWidth(anchoMaximo);
+        }
+    }*/
 }
