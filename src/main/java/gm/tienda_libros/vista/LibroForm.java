@@ -18,6 +18,19 @@ public class LibroForm extends JFrame {
     private final LibroServicio libroServicio;
     private JPanel panel;
     private JTable tablaLibros;
+    private JTextField libroTextField;
+    private JTextField autorTextField;
+    private JTextField editorialTextField;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JLabel precioTextField;
+    private JTextField existenciastextField;
+    private JPanel libroPanel;
+    private JLabel autorPanel;
+    private JPanel editorialPanel;
+    private JPanel añoPanel;
+    private JPanel precioPanel;
+    private JPanel existenciasPanel;
     private DefaultTableModel tableModel;
 
     @Autowired
@@ -34,7 +47,7 @@ public class LibroForm extends JFrame {
         //Lo hacemos visible
         setVisible(true);
         //Definimos el tamaño de la ventana en 900 x 600 px
-        setSize(1000, 700);
+        setSize(1100, 700);
         /*Esto es para centrar la ventana*/
         //Obtenemos la información del sistema
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -51,7 +64,7 @@ public class LibroForm extends JFrame {
     private void createUIComponents() {
 
         //Creamos una instancia de DefaultTableModel, especificamos 0 filas y 7 columnas en el constructor
-        tableModel = new DefaultTableModel(0,8){
+        tableModel = new DefaultTableModel(0,7){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
