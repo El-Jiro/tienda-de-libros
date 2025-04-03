@@ -21,16 +21,9 @@ public class LibroForm extends JFrame {
     private JTextField libroTextField;
     private JTextField autorTextField;
     private JTextField editorialTextField;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JLabel precioTextField;
+    private JTextField añoTextField;
+    private JTextField precioTextField;
     private JTextField existenciastextField;
-    private JPanel libroPanel;
-    private JLabel autorPanel;
-    private JPanel editorialPanel;
-    private JPanel añoPanel;
-    private JPanel precioPanel;
-    private JPanel existenciasPanel;
     private DefaultTableModel tableModel;
 
     @Autowired
@@ -79,9 +72,6 @@ public class LibroForm extends JFrame {
         mostrarLibros();
         SwingUtilities.invokeLater(this::autoajustarAlContenido);
         SwingUtilities.invokeLater(this::centrarContenido);
-
-        //tablaLibros.getTableHeader().setResizingAllowed(true);
-        //tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 
 
@@ -117,7 +107,7 @@ public class LibroForm extends JFrame {
                 TableCellRenderer renderer = tablaLibros.getCellRenderer(fila, columna);
                 java.awt.Component component =  tablaLibros.prepareRenderer(renderer, fila, columna);
                 if (component instanceof JComponent) {
-                    anchoMaximo = Math.max(((JComponent) component).getPreferredSize().width + 5, anchoMaximo);
+                    anchoMaximo = Math.max(((JComponent) component).getPreferredSize().width + 10, anchoMaximo);
                 }
             }
 
@@ -132,4 +122,6 @@ public class LibroForm extends JFrame {
             tablaLibros.getColumnModel().getColumn(columna).setCellRenderer(centerRenderer);
         }
     }
+
+
 }
