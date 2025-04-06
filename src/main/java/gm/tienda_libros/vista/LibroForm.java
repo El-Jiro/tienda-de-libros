@@ -24,6 +24,7 @@ public class LibroForm extends JFrame {
     private JTextField añoTextField;
     private JTextField precioTextField;
     private JTextField existenciastextField;
+    private JButton agregarButton;
     private DefaultTableModel tableModel;
 
     @Autowired
