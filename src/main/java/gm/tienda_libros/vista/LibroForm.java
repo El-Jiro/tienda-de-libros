@@ -1,5 +1,6 @@
 package gm.tienda_libros.vista;
 
+import gm.tienda_libros.modelo.Libro;
 import gm.tienda_libros.servicio.LibroServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Year;
 import javax.swing.SwingUtilities;
 
 @Component
@@ -31,14 +33,13 @@ public class LibroForm extends JFrame {
     private JButton eliminarButton;
     private DefaultTableModel tableModel;
 
+    //-----------------Constructor e inicializadores de la interfaz gráfica-----------------------
     @Autowired
     public LibroForm(LibroServicio libroServicio){
         this.libroServicio = libroServicio;
         iniciarForma();
 
-        agregarButton.addActionListener(e -> {
-
-        });
+        agregarButton.addActionListener(e -> agregarLibro());
 
         modificarButton.addActionListener(e -> {
 
@@ -91,7 +92,7 @@ public class LibroForm extends JFrame {
         SwingUtilities.invokeLater(this::centrarContenido);
     }
 
-
+    //-----------Métodos del CRUD--------------
     private void mostrarLibros(){
         //Limpiar la tabla
         tableModel.setRowCount(0);
@@ -113,6 +114,60 @@ public class LibroForm extends JFrame {
         });
     }
 
+    private void agregarLibro(){
+        /*
+        Obtenemos los valores del título y el autor, si alguno de los dos está vacío mandamos un mensaje
+        de error indicando al usuario que rellene al menos esos dos campos
+        */
+        if(libroTextField.getText().isEmpty()){
+            mostrarMensaje("Proporciona el título del libro");
+            libroTextField.requestFocusInWindow();
+            return;
+        } else if (autorTextField.getText().isEmpty()){
+            mostrarMensaje("Proporciona el autor del libro");
+            return;
+        }
+
+        //Si ninguno está vacío, ya podemos continuar, obtenemos los valores de todos los campos y los guardamos en variables
+        var titulo = libroTextField.getText();
+        var autor = autorTextField.getText();
+        var editorial = editorialTextField.getText();
+        var año = Year.parse(añoTextField.getText());
+        var precio = Float.parseFloat(precioTextField.getText());
+        var existencias = Integer.parseInt(existenciastextField.getText());
+
+        //Llamamos al metodo Builder
+        Libro libro = Libro.builderSinId().
+                titulo(titulo).
+                autor(autor).
+                editorial(editorial).
+                año(año).
+                precio(precio).
+                existencias(existencias)
+                .build();
+
+        //Llamamos al metodo guardarLibro de nuestro servicio
+        libroServicio.guardarLibro(libro);
+        //mandamos un mensaje de que se agregó correctamente el libro
+        mostrarMensaje("Se ha agregado correctamente el libro: " + titulo);
+        //Limpiamos el formulario
+        limpiarFormulario();
+    }
+
+    //Limpiar el formulario
+    private void limpiarFormulario(){
+        libroTextField.setText("");
+        autorTextField.setText("");
+        editorialTextField.setText("");
+        añoTextField.setText("");
+        precioTextField.setText("");
+        existenciastextField.setText("");
+    }
+    //Mostrar un mensaje
+    private void mostrarMensaje(String mensaje){
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+    //---------Ajustar tamaño de las columnas y centrar el texto en las celdas------------
     private void autoajustarAlContenido(){
         tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
