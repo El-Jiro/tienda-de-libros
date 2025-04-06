@@ -28,17 +28,23 @@ public class LibroForm extends JFrame {
     private JTextField existenciastextField;
     private JButton agregarButton;
     private JButton modificarButton;
+    private JButton eliminarButton;
     private DefaultTableModel tableModel;
 
     @Autowired
     public LibroForm(LibroServicio libroServicio){
         this.libroServicio = libroServicio;
         iniciarForma();
+
         agregarButton.addActionListener(e -> {
 
         });
 
         modificarButton.addActionListener(e -> {
+
+        });
+
+        eliminarButton.addActionListener(e -> {
 
         });
     }
