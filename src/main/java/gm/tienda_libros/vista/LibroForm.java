@@ -27,6 +27,7 @@ public class LibroForm extends JFrame {
     private JTextField precioTextField;
     private JTextField existenciastextField;
     private JButton agregarButton;
+    private JButton modificarButton;
     private DefaultTableModel tableModel;
 
     @Autowired
@@ -34,6 +35,10 @@ public class LibroForm extends JFrame {
         this.libroServicio = libroServicio;
         iniciarForma();
         agregarButton.addActionListener(e -> {
+
+        });
+
+        modificarButton.addActionListener(e -> {
 
         });
     }
