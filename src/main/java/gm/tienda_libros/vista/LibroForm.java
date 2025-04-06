@@ -10,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.SwingUtilities;
 
 @Component
@@ -31,6 +33,9 @@ public class LibroForm extends JFrame {
     public LibroForm(LibroServicio libroServicio){
         this.libroServicio = libroServicio;
         iniciarForma();
+        agregarButton.addActionListener(e -> {
+
+        });
     }
 
     private void iniciarForma(){
