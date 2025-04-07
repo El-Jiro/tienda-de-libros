@@ -11,6 +11,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.Year;
 import java.util.List;
 import javax.swing.SwingUtilities;
@@ -21,6 +23,7 @@ public class LibroForm extends JFrame {
     private final LibroServicio libroServicio;
     private JPanel panel;
     private JTable tablaLibros;
+    private JTextField idTextField;
     private JTextField libroTextField;
     private JTextField autorTextField;
     private JTextField editorialTextField;
@@ -47,6 +50,14 @@ public class LibroForm extends JFrame {
         eliminarButton.addActionListener(e -> {
 
         });
+
+        tablaLibros.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                cargarLibroSeleccionado();
+            }
+        });
     }
 
     private void iniciarForma(){
@@ -67,11 +78,15 @@ public class LibroForm extends JFrame {
         //el alto y ancho de nuestra ventana y dividiendo el resultado entre 2
         int ejeX = (tamañoPantalla.width - getWidth())/2;
         int ejeY = (tamañoPantalla.height - getHeight())/2;
-        //Los pasamos como argumentos al metodo setLocation
+        //Los pasamos como argumentos al método setLocation
         setLocation(ejeX, ejeY);
     }
 
     private void createUIComponents() {
+
+        //Creamos un nuevo JTextField vacío llamado idTextField
+        idTextField = new JTextField("");
+        idTextField.setVisible(false); //Lo hacemos invisible
 
         //Creamos una instancia de DefaultTableModel, especificamos 0 filas y 7 columnas en el constructor
         tableModel = new DefaultTableModel(0,7){
@@ -171,6 +186,44 @@ public class LibroForm extends JFrame {
     private void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(this, mensaje);
     }
+
+    //Cargar la info de la fila seleccionada en nuestro formulario
+    private void cargarLibroSeleccionado(){
+
+        //Llamamos a getSelectedRow y lo guardamos en la variable registro
+        int registro = tablaLibros.getSelectedRow();
+        /*
+         * Comprobamos que el registro sea mayor a -1 ya que los índices de las filas empiezan
+         * a contar desde 0, */
+        if (registro > -1){
+            /*Obtenemos el ID del registro en cuestión llamando al método getModel de nuestra tabla
+            * y posteriormente a getValueAt, donde pasaremos el índice de la fila y el de la columna
+            * como si fueran coordenadas, la fila será la seleccionada por el usuario y la columna 0*/
+            String idLibro = tablaLibros.getModel().getValueAt(registro, 0).toString();
+            //Establecemos el id obtenido como texto de idTextField
+            idTextField.setText(idLibro);
+
+            //Realizamos la misma acción para el resto de campos de la tabla
+            String titulo = tablaLibros.getModel().getValueAt(registro, 1).toString();
+            libroTextField.setText(titulo);
+
+            String autor = tablaLibros.getModel().getValueAt(registro, 2).toString();
+            autorTextField.setText(autor);
+
+            String editorial = tablaLibros.getModel().getValueAt(registro, 3).toString();
+            editorialTextField.setText(editorial);
+
+            String año = tablaLibros.getModel().getValueAt(registro, 4).toString();
+            añoTextField.setText(año);
+
+            String precio = tablaLibros.getModel().getValueAt(registro, 5).toString();
+            precioTextField.setText(precio);
+
+            String existencias = tablaLibros.getModel().getValueAt(registro, 6).toString();
+            existenciasTextField.setText(existencias);
+        }
+
+    }
     //---------Ajustar tamaño de las columnas y centrar el texto en las celdas------------
     private void autoajustarAlContenido(){
         tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -183,7 +236,7 @@ public class LibroForm extends JFrame {
                 TableCellRenderer renderer = tablaLibros.getCellRenderer(fila, columna);
                 java.awt.Component component =  tablaLibros.prepareRenderer(renderer, fila, columna);
                 if (component instanceof JComponent) {
-                    anchoMaximo = Math.max(((JComponent) component).getPreferredSize().width + 10, anchoMaximo);
+                    anchoMaximo = Math.max((component).getPreferredSize().width + 10, anchoMaximo);
                 }
             }
 
