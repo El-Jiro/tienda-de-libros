@@ -1,8 +1,6 @@
 package gm.tienda_libros.servicio;
 
 import gm.tienda_libros.modelo.Libro;
-import gm.tienda_libros.repositorio.LibroRepositorio;
-
 import java.util.List;
 
 public interface ILibroServicio {

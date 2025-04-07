@@ -11,8 +11,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.Year;
 import java.util.List;
 import javax.swing.SwingUtilities;
@@ -28,7 +26,7 @@ public class LibroForm extends JFrame {
     private JTextField editorialTextField;
     private JTextField añoTextField;
     private JTextField precioTextField;
-    private JTextField existenciastextField;
+    private JTextField existenciasTextField;
     private JButton agregarButton;
     private JButton modificarButton;
     private JButton eliminarButton;
@@ -138,9 +136,9 @@ public class LibroForm extends JFrame {
         var editorial = editorialTextField.getText();
         var año = Year.parse(añoTextField.getText());
         var precio = Float.parseFloat(precioTextField.getText());
-        var existencias = Integer.parseInt(existenciastextField.getText());
+        var existencias = Integer.parseInt(existenciasTextField.getText());
 
-        //Llamamos al metodo Builder
+        //Llamamos al método Builder
         Libro libro = Libro.builderSinId().
                 titulo(titulo).
                 autor(autor).
@@ -150,7 +148,7 @@ public class LibroForm extends JFrame {
                 existencias(existencias)
                 .build();
 
-        //Llamamos al metodo guardarLibro de nuestro servicio
+        //Llamamos al método guardarLibro de nuestro servicio
         libroServicio.guardarLibro(libro);
         //mandamos un mensaje de que se agregó correctamente el libro
         mostrarMensaje("Se ha agregado correctamente el libro: " + titulo);
@@ -167,7 +165,7 @@ public class LibroForm extends JFrame {
         editorialTextField.setText("");
         añoTextField.setText("");
         precioTextField.setText("");
-        existenciastextField.setText("");
+        existenciasTextField.setText("");
     }
     //Mostrar un mensaje
     private void mostrarMensaje(String mensaje){

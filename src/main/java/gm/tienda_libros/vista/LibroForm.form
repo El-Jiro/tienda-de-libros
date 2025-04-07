@@ -71,6 +71,7 @@
                 </constraints>
                 <properties>
                   <text value=""/>
+                  <toolTipText value="Ingrese el título del libro"/>
                 </properties>
               </component>
             </children>
@@ -205,7 +206,7 @@
                   <text value="Existencias"/>
                 </properties>
               </component>
-              <component id="ffff1" class="javax.swing.JTextField" binding="existenciastextField">
+              <component id="ffff1" class="javax.swing.JTextField" binding="existenciasTextField">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
                     <preferred-size width="40" height="-1"/>
