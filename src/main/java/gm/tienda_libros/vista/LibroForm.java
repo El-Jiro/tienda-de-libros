@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.Year;
+import java.util.List;
 import javax.swing.SwingUtilities;
 
 @Component
@@ -58,7 +59,7 @@ public class LibroForm extends JFrame {
         //Lo hacemos visible
         setVisible(true);
         //Definimos el tamaño de la ventana en 900 x 600 px
-        setSize(1100, 700);
+        setSize(1200, 800);
         /*Esto es para centrar la ventana*/
         //Obtenemos la información del sistema
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -68,7 +69,7 @@ public class LibroForm extends JFrame {
         //el alto y ancho de nuestra ventana y dividiendo el resultado entre 2
         int ejeX = (tamañoPantalla.width - getWidth())/2;
         int ejeY = (tamañoPantalla.height - getHeight())/2;
-        //Los pasamos como argumentos al método setLocation
+        //Los pasamos como argumentos al metodo setLocation
         setLocation(ejeX, ejeY);
     }
 
@@ -81,6 +82,7 @@ public class LibroForm extends JFrame {
                 return false;
             }
         };
+
         //Creamos un array de Strings para los nombres o encabezados de las columnas
         String[] encabezados = {"ID", "Título", "Autor", "Editorial", "Año", "Precio", "Existencias"};
         //Llamamos al setColumnIdentifiers y le pasamos nuestro array
@@ -97,8 +99,10 @@ public class LibroForm extends JFrame {
         //Limpiar la tabla
         tableModel.setRowCount(0);
         //Obtener los libros
-        var libros = libroServicio.listarLibros();
+        List<Libro> libros = libroServicio.listarLibros();
+        //Iteramos sobre la lista con un forEach
         libros.forEach(libro -> {
+            //Obtenemos los atributos del libro con los getters y los guardamos en un Array de tipo Object
             Object [] libroFila = {
                     libro.getIdLibro(),
                     libro.getTitulo(),
@@ -128,7 +132,7 @@ public class LibroForm extends JFrame {
             return;
         }
 
-        //Si ninguno está vacío, ya podemos continuar, obtenemos los valores de todos los campos y los guardamos en variables
+        //Si ninguno está vacío, a continuación obtenemos los valores de todos los campos y los guardamos en variables
         var titulo = libroTextField.getText();
         var autor = autorTextField.getText();
         var editorial = editorialTextField.getText();
@@ -152,6 +156,8 @@ public class LibroForm extends JFrame {
         mostrarMensaje("Se ha agregado correctamente el libro: " + titulo);
         //Limpiamos el formulario
         limpiarFormulario();
+        //Llamamos a mostrarLibros para que se actualice automáticamente la tabla
+        mostrarLibros();
     }
 
     //Limpiar el formulario
