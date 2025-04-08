@@ -13,6 +13,6 @@ public interface ILibroServicio {
 
      void eliminarLibro(Integer idLibro);
 
-     boolean verificarExistencia(Integer idLibro);
+
 
 }

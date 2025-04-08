@@ -13,7 +13,6 @@ import java.time.Year;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 
 public class Libro {
     @Id

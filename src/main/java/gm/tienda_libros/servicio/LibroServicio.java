@@ -36,9 +36,4 @@ public class LibroServicio implements ILibroServicio{
         libroRepositorio.deleteById(idLibro);
     }
 
-    @Override
-    public boolean verificarExistencia(Integer idLibro) {
-        var exists = libroRepositorio.existsById(idLibro);
-        return exists;
-    }
 }

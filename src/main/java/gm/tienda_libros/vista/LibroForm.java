@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.Year;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import javax.swing.SwingUtilities;
 
@@ -43,9 +44,7 @@ public class LibroForm extends JFrame {
 
         agregarButton.addActionListener(e -> agregarLibro());
 
-        modificarButton.addActionListener(e -> {
-
-        });
+        modificarButton.addActionListener(e -> modificarLibro());
 
         eliminarButton.addActionListener(e -> {
 
@@ -106,7 +105,7 @@ public class LibroForm extends JFrame {
         SwingUtilities.invokeLater(this::autoajustarAlContenido);
         SwingUtilities.invokeLater(this::centrarContenido);
     }
-
+    //---------------------------------------------------------------------
     //-----------Métodos del CRUD--------------
     private void mostrarLibros(){
         //Limpiar la tabla
@@ -132,20 +131,84 @@ public class LibroForm extends JFrame {
     }
 
     private void agregarLibro(){
-        /*
+        try {
+            /*
         Obtenemos los valores del título y el autor, si alguno de los dos está vacío mandamos un mensaje
         de error indicando al usuario que rellene al menos esos dos campos
         */
-        if(libroTextField.getText().isEmpty()){
-            mostrarMensaje("Proporciona el título del libro");
-            libroTextField.requestFocusInWindow();
-            return;
-        } else if (autorTextField.getText().isEmpty()){
-            mostrarMensaje("Proporciona el autor del libro");
+            if(libroTextField.getText().isEmpty()){
+                mostrarMensaje("Proporciona el título del libro");
+                libroTextField.requestFocusInWindow();
+                return;
+            } else if (autorTextField.getText().isEmpty()){
+                mostrarMensaje("Proporciona el autor del libro");
+                autorTextField.requestFocusInWindow();
+                return;
+            }
+
+            //Si ninguno está vacío, a continuación obtenemos los valores de todos los campos y los guardamos en variables
+            var titulo = libroTextField.getText();
+            var autor = autorTextField.getText();
+            var editorial = editorialTextField.getText();
+            var año = Year.parse(añoTextField.getText());
+            float precio = 0;
+            int existencias = 0;
+
+            if (!precioTextField.getText().isEmpty()){
+                try{
+                    precio = Float.parseFloat(precioTextField.getText());
+                } catch (NumberFormatException e){
+                    mostrarMensaje("El precio introducido no es válido");
+                    precioTextField.requestFocusInWindow();
+                    return;
+                }
+            }
+
+            if (!existenciasTextField.getText().isEmpty()){
+                try {
+                    existencias =  Integer.parseInt(existenciasTextField.getText());
+                }  catch (NumberFormatException e){
+                    mostrarMensaje("Las existencias introducidas no son válidas");
+                    precioTextField.requestFocusInWindow();
+                    return;
+                }
+            }
+
+            //Llamamos al método Builder
+            Libro libro = Libro.builderSinId().
+                    titulo(titulo).
+                    autor(autor).
+                    editorial(editorial).
+                    año(año).
+                    precio(precio).
+                    existencias(existencias)
+                    .build();
+
+            //Llamamos al método guardarLibro de nuestro servicio
+            libroServicio.guardarLibro(libro);
+            //mandamos un mensaje de que se agregó correctamente el libro
+            mostrarMensaje("Se ha agregado correctamente el libro: " + titulo);
+            //Limpiamos el formulario
+            limpiarFormulario();
+            //Llamamos a mostrarLibros para que se actualice automáticamente la tabla
+            mostrarLibros();
+        } catch (DateTimeParseException e){
+            mostrarMensaje("El año introducido no es válido");
+        }
+    }
+
+    private void modificarLibro(){
+
+        //Si el id está vacío, es decir no se ha seleccionado un libro de la tabla, mandamos un aviso al usuario
+        if (idTextField.getText().isEmpty()){
+            mostrarMensaje("No se ha seleccionado ningún libro");
+            tablaLibros.requestFocusInWindow();
+            //Detenemos la ejecución del método
             return;
         }
 
-        //Si ninguno está vacío, a continuación obtenemos los valores de todos los campos y los guardamos en variables
+        //Empezamos a obtener los valores de los textFields y guardamos en variables locales
+        var idLibro = Integer.parseInt(idTextField.getText());
         var titulo = libroTextField.getText();
         var autor = autorTextField.getText();
         var editorial = editorialTextField.getText();
@@ -153,28 +216,31 @@ public class LibroForm extends JFrame {
         var precio = Float.parseFloat(precioTextField.getText());
         var existencias = Integer.parseInt(existenciasTextField.getText());
 
-        //Llamamos al método Builder
-        Libro libro = Libro.builderSinId().
-                titulo(titulo).
-                autor(autor).
-                editorial(editorial).
-                año(año).
-                precio(precio).
-                existencias(existencias)
-                .build();
+        //Creamos un nuevo objeto Libro con el contructor vacío y usamos los setters para pasarle la información del formulario
+        Libro libro = new Libro();
+        libro.setIdLibro(idLibro);
+        libro.setTitulo(titulo);
+        libro.setAutor(autor);
+        libro.setEditorial(editorial);
+        libro.setAño(año);
+        libro.setPrecio(precio);
+        libro.setExistencias(existencias);
 
-        //Llamamos al método guardarLibro de nuestro servicio
+        //Actualizamos los datos
         libroServicio.guardarLibro(libro);
-        //mandamos un mensaje de que se agregó correctamente el libro
-        mostrarMensaje("Se ha agregado correctamente el libro: " + titulo);
-        //Limpiamos el formulario
-        limpiarFormulario();
-        //Llamamos a mostrarLibros para que se actualice automáticamente la tabla
+
+        //Mandamos un mensaje de confirmación
+        mostrarMensaje("Se ha actualizado correctamente la información del libro: " + titulo);
+
+        //recargamos la tabla
         mostrarLibros();
+
     }
+    //------------------------------------------
 
     //Limpiar el formulario
     private void limpiarFormulario(){
+        idTextField.setText("");
         libroTextField.setText("");
         autorTextField.setText("");
         editorialTextField.setText("");
@@ -196,10 +262,12 @@ public class LibroForm extends JFrame {
          * Comprobamos que el registro sea mayor a -1 ya que los índices de las filas empiezan
          * a contar desde 0, */
         if (registro > -1){
+
             /*Obtenemos el ID del registro en cuestión llamando al método getModel de nuestra tabla
             * y posteriormente a getValueAt, donde pasaremos el índice de la fila y el de la columna
             * como si fueran coordenadas, la fila será la seleccionada por el usuario y la columna 0*/
             String idLibro = tablaLibros.getModel().getValueAt(registro, 0).toString();
+
             //Establecemos el id obtenido como texto de idTextField
             idTextField.setText(idLibro);
 
@@ -224,6 +292,7 @@ public class LibroForm extends JFrame {
         }
 
     }
+
     //---------Ajustar tamaño de las columnas y centrar el texto en las celdas------------
     private void autoajustarAlContenido(){
         tablaLibros.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
