@@ -263,7 +263,7 @@ public class LibroForm extends JFrame {
             libroServicio.guardarLibro(libro);
 
             //Mandamos un mensaje de confirmación
-            mostrarMensaje("Se ha actualizado correctamente la información del libro: " + titulo);
+            mostrarMensaje("Se ha modificado correctamente el libro: " + titulo);
             //Limpiamos los campos
             limpiarFormulario();
             //recargamos la tabla
