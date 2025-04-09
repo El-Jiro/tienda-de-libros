@@ -132,10 +132,11 @@ public class LibroForm extends JFrame {
 
     private void agregarLibro(){
         try {
+
             /*
-        Obtenemos los valores del título y el autor, si alguno de los dos está vacío mandamos un mensaje
-        de error indicando al usuario que rellene al menos esos dos campos
-        */
+            * Obtenemos los valores del título y el autor, si alguno de los dos está vacío mandamos un mensaje
+            * de error indicando al usuario que rellene al menos esos dos campos
+            * */
             if(libroTextField.getText().isEmpty()){
                 mostrarMensaje("Proporciona el título del libro");
                 libroTextField.requestFocusInWindow();
@@ -207,34 +208,71 @@ public class LibroForm extends JFrame {
             return;
         }
 
-        //Empezamos a obtener los valores de los textFields y guardamos en variables locales
-        var idLibro = Integer.parseInt(idTextField.getText());
-        var titulo = libroTextField.getText();
-        var autor = autorTextField.getText();
-        var editorial = editorialTextField.getText();
-        var año = Year.parse(añoTextField.getText());
-        var precio = Float.parseFloat(precioTextField.getText());
-        var existencias = Integer.parseInt(existenciasTextField.getText());
+        if(libroTextField.getText().isEmpty()){
+            mostrarMensaje("Proporciona el título del libro");
+            libroTextField.requestFocusInWindow();
+            return;
+        } else if (autorTextField.getText().isEmpty()){
+            mostrarMensaje("Proporciona el autor del libro");
+            autorTextField.requestFocusInWindow();
+            return;
+        }
 
-        //Creamos un nuevo objeto Libro con el contructor vacío y usamos los setters para pasarle la información del formulario
-        Libro libro = new Libro();
-        libro.setIdLibro(idLibro);
-        libro.setTitulo(titulo);
-        libro.setAutor(autor);
-        libro.setEditorial(editorial);
-        libro.setAño(año);
-        libro.setPrecio(precio);
-        libro.setExistencias(existencias);
+        try {
+            //Empezamos a obtener los valores de los textFields y guardamos en variables locales
+            var idLibro = Integer.parseInt(idTextField.getText());
+            var titulo = libroTextField.getText();
+            var autor = autorTextField.getText();
+            var editorial = editorialTextField.getText();
+            var año = Year.parse(añoTextField.getText());
+            float precio = 0;
+            int existencias = 0;
 
-        //Actualizamos los datos
-        libroServicio.guardarLibro(libro);
+          if (!precioTextField.getText().isEmpty()){
 
-        //Mandamos un mensaje de confirmación
-        mostrarMensaje("Se ha actualizado correctamente la información del libro: " + titulo);
+              try{
+                  precio = Float.parseFloat(precioTextField.getText());
+              } catch (NumberFormatException e) {
+                  mostrarMensaje("El precio introducido no es válido");
+                  precioTextField.requestFocusInWindow();
+                  return;
+              }
+          }
 
-        //recargamos la tabla
-        mostrarLibros();
+          if(!existenciasTextField.getText().isEmpty()){
+              try {
+                  existencias = Integer.parseInt(existenciasTextField.getText());
+              } catch (NumberFormatException e) {
+                  mostrarMensaje("Las existencias introducidas no son válidas");
+                  existenciasTextField.requestFocusInWindow();
+                  return;
+              }
+          }
 
+            //Creamos un nuevo objeto Libro con el contructor vacío y usamos los setters para pasarle la información del formulario
+            Libro libro = new Libro();
+            libro.setIdLibro(idLibro);
+            libro.setTitulo(titulo);
+            libro.setAutor(autor);
+            libro.setEditorial(editorial);
+            libro.setAño(año);
+            libro.setPrecio(precio);
+            libro.setExistencias(existencias);
+
+            //Actualizamos los datos
+            libroServicio.guardarLibro(libro);
+
+            //Mandamos un mensaje de confirmación
+            mostrarMensaje("Se ha actualizado correctamente la información del libro: " + titulo);
+            //Limpiamos los campos
+            limpiarFormulario();
+            //recargamos la tabla
+            mostrarLibros();
+        } catch (DateTimeParseException e){
+            mostrarMensaje("El año introducido no es válido");
+            añoTextField.requestFocusInWindow();
+            return;
+        }
     }
     //------------------------------------------
 
