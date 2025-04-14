@@ -46,9 +46,7 @@ public class LibroForm extends JFrame {
 
         modificarButton.addActionListener(e -> modificarLibro());
 
-        eliminarButton.addActionListener(e -> {
-
-        });
+        eliminarButton.addActionListener(e -> borrarLibro());
 
         tablaLibros.addMouseListener(new MouseAdapter() {
             @Override
@@ -89,6 +87,9 @@ public class LibroForm extends JFrame {
 
         //Creamos una instancia de DefaultTableModel, especificamos 0 filas y 7 columnas en el constructor
         tableModel = new DefaultTableModel(0,7){
+            /*
+            *Deshabilitamos la edición de las celdas para asegurarnos que todo cambio se haga única y exclusivamente mediante
+            * el formulario y de esta manera se vea reflejado en la base de datos*/
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -101,7 +102,9 @@ public class LibroForm extends JFrame {
         this.tableModel.setColumnIdentifiers(encabezados);
         //Inicializamos el objeto tablaLibros como instancia de JTable y le pasamos tableModel en el constructor
         tablaLibros = new JTable(tableModel);
+        //Rellenamos la tabla con la información de la base de datos
         mostrarLibros();
+        //LLamamos a los métodos para ajustar el tamaño de las celdas y centrar el texto una vez que haya cargado la vista
         SwingUtilities.invokeLater(this::autoajustarAlContenido);
         SwingUtilities.invokeLater(this::centrarContenido);
     }
@@ -125,18 +128,18 @@ public class LibroForm extends JFrame {
                     libro.getExistencias()
             };
 
-            //Añadimos la fila a la tabla
+            //Añadimos la fila al modelo de la tabla
             this.tableModel.addRow(libroFila);
         });
     }
 
     private void agregarLibro(){
         try {
-
             /*
             * Obtenemos los valores del título y el autor, si alguno de los dos está vacío mandamos un mensaje
             * de error indicando al usuario que rellene al menos esos dos campos
             * */
+
             if(libroTextField.getText().isEmpty()){
                 mostrarMensaje("Proporciona el título del libro");
                 libroTextField.requestFocusInWindow();
@@ -155,6 +158,9 @@ public class LibroForm extends JFrame {
             float precio = 0;
             int existencias = 0;
 
+            /*
+              * Validamos el precio, si hay un error al tratar de parsearlo a float mandamos un mensaje de error
+              * y detenemos la ejecución del método */
             if (!precioTextField.getText().isEmpty()){
                 try{
                     precio = Float.parseFloat(precioTextField.getText());
@@ -165,6 +171,7 @@ public class LibroForm extends JFrame {
                 }
             }
 
+            //Realizamos lo mismo con las existencias
             if (!existenciasTextField.getText().isEmpty()){
                 try {
                     existencias =  Integer.parseInt(existenciasTextField.getText());
@@ -274,10 +281,48 @@ public class LibroForm extends JFrame {
             return;
         }
     }
+
+    private void borrarLibro() {
+
+        //Verificamos que el id no esté vacío
+        if (idTextField.getText().isEmpty()) {
+            mostrarMensaje("No se ha seleccionado ningún libro");
+            return;
+        }
+
+        //Enviamos un mensaje de confirmación y guardamos la respuesta en una variable
+        int confirmacion = JOptionPane.showOptionDialog(this,
+                "¿Está seguro de que desea eliminar el libro?",
+                "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, new Object[]{"Sí", "No"}, JOptionPane.NO_OPTION);
+
+        //Si el usuario respondió no (representado con un 1) detenemos la ejecución del método
+        if (confirmacion == 1)
+            return;
+
+        //Por el contrario, si respondió con un sí, obtenemos el id del libro de nuestro TextField oculto
+        var idLibro = Integer.parseInt(idTextField.getText());
+
+        //Obtenemos también el título
+        var titulo = libroTextField.getText();
+
+        //Ahora llamamos al método eliminarlibro de nuestro servicio
+        libroServicio.eliminarLibro(idLibro);
+
+        //Limpiamos el formulario
+        limpiarFormulario();
+
+        //Actualizamos la vista de la tabla
+        mostrarLibros();
+
+        //Mandamos un mensaje de confirmación:
+        mostrarMensaje("Se ha eliminado correctamente el libro: "+ titulo);
+    }
     //------------------------------------------
 
     //Limpiar el formulario
     private void limpiarFormulario(){
+
         idTextField.setText("");
         libroTextField.setText("");
         autorTextField.setText("");
@@ -286,6 +331,7 @@ public class LibroForm extends JFrame {
         precioTextField.setText("");
         existenciasTextField.setText("");
     }
+
     //Mostrar un mensaje
     private void mostrarMensaje(String mensaje){
         JOptionPane.showMessageDialog(this, mensaje);
