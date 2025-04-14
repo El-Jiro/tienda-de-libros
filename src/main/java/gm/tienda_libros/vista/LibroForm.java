@@ -296,8 +296,9 @@ public class LibroForm extends JFrame {
                 "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, new Object[]{"Sí", "No"}, JOptionPane.NO_OPTION);
 
-        //Si el usuario respondió no (representado con un 1) detenemos la ejecución del método
-        if (confirmacion == 1)
+        //Si el usuario respondió no (representado con un 1) o sí cerró la ventana
+        // sin seleccionar ninguna opción (-1) detenemos la ejecución del método
+        if (confirmacion == 1||confirmacion == -1)
             return;
 
         //Por el contrario, si respondió con un sí, obtenemos el id del libro de nuestro TextField oculto
